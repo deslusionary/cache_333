@@ -1,9 +1,9 @@
 ////////////
 // Filename: data_mem.sv
-// Author: Christopher Tinker
+// Author: Christopher Tinker, Keefe Johnson, Joseph Callenes-Sloan
 // Date: 2023/03/02
 // 
-// L1 cache data memory
+// L1 direct mapped data cache data memory
 ////////////
 
 `include "defs.svh"
