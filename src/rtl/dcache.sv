@@ -57,7 +57,7 @@ module dcache (
     
     // Cache control signals for cache read from main memory
     assign mem_req.index        = core_req_addr_r[11:4];
-    assign mem_req.wr_en        = (mem.read_addr_valid && mem.read_data_valid); // review
+    assign mem_req.wr_en        = 1'b1;; // review
     assign mem_req.byte_en      = '0; // do not care
     assign mem_req.block_offset = '0; // do not care
     assign mem_req.from_ram     = 1'b1;
@@ -73,7 +73,7 @@ module dcache (
     assign mem_wr_tag.valid = 1'b1;
 
     // Cache write data mux
-    assign dmem_wr_data = (core_req.from_ram) ? {96'b0, core.write_data} : {96'b0, mem.read_data};
+    assign dmem_wr_data = (cache_ctrl.from_ram) ? mem.read_data : {96'b0, core.write_data} ;
 
     tag_mem l1_tag_mem (
         .clk_i       (clk_i),
@@ -165,14 +165,14 @@ module dcache (
 
             ALLOCATE: begin
                 // AXI violation in FSM - no combinational paths between input and output!
-                mem.read_addr_valid = 1'b1;
-                cache_ctrl          = mem_req;
                 wr_tag              = mem_wr_tag;
 
                 if (mem.read_data_valid) begin
+                    mem.read_addr_valid = 1'b0;
+                    cache_ctrl = mem_req;
                     next_state = COMPARE_TAG;
                 end else begin
-                    //mem.read_addr_valid = 1'b1;
+                    mem.read_addr_valid = 1'b1;
                     next_state = ALLOCATE;
                 end
             end
