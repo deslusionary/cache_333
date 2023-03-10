@@ -16,12 +16,12 @@
 `define ADDR_WIDTH 32
 `define DATA_WIDTH 32
 `define WORD_WIDTH 32
-`define WORD_SIZE `DATA_WIDTH / 8
-`define MMIO_START_ADDR 'h11000000\
+`define WORD_SIZE (`DATA_WIDTH / 8)
+`define MMIO_START_ADDR 'h11000000
 `define BLOCK_SIZE 16
 `define BLOCK_WIDTH `BLOCK_SIZE * 8
 `define WORD_ADDR_LSB $clog2(`WORD_SIZE)
-`define BLOCK_ADDR_LSB $clog2(BLOCK_SIZE)
+`define BLOCK_ADDR_LSB $clog2(`BLOCK_SIZE)
 
 
 typedef struct packed{
@@ -30,7 +30,7 @@ typedef struct packed{
     logic [`TAG_MSB:`TAG_LSB] tag;
 } cache_tag_t;
 
-typedef struct {
+typedef struct packed {
     logic [7:0] index;
     logic       wr_en;
     // Signals needed only for L1_cache_data

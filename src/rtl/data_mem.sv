@@ -17,11 +17,6 @@ module data_mem (
 );
     
     logic [`LINE_LEN-1:0] mem[0:255];
-    
-    initial begin
-        for(int i=0; i<256; i++)
-            mem[i]='0;
-    end
 
     always_ff @(posedge clk_i) begin
         if(cache_req_i.wr_en) begin

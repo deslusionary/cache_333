@@ -18,6 +18,12 @@ module tag_mem #(
     output cache_tag_t rd_tag_o
 );
     cache_tag_t mem [0:TAG_MEM_SIZE-1];
+    
+    initial begin
+        for (int i = 0; i < TAG_MEM_SIZE; i++) begin
+            mem[i] = '0;
+        end
+    end
 
     // Synchronous write
     always_ff @(posedge clk_i) begin
