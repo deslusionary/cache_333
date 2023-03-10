@@ -34,7 +34,7 @@ module cache_testbench();
     default clocking cb @(posedge clk); endclocking
 
     localparam INDEX_WIDTH = $clog2(CACHE_LINES);
-    localparam TAG_MSB = ADDR_WIDTH - 1; 
+    localparam TAG_MSB = `ADDR_WIDTH - 1; 
     localparam TAG_LSB = `BLOCK_ADDR_LSB + INDEX_WIDTH; 
     localparam INDEX_MSB = `BLOCK_ADDR_LSB + INDEX_WIDTH - 1; 
     localparam INDEX_LSB = `BLOCK_ADDR_LSB; 
@@ -52,7 +52,7 @@ module cache_testbench();
     logic [BLOCK_OFFSET_MSB:BLOCK_OFFSET_LSB] s_dcache_block_offset;
     logic [BYTE_OFFSET_MSB:BYTE_OFFSET_LSB] s_dcache_byte_offset;
 
-    dcache dcache(.clk_i(clk), .reset_i('0), .mhub_i(s_dcache), .ram_i(s_dcache_to_ram));
+    dcache dcache(.clk_i(clk), .rst_i('0), .core(s_dcache), .mem(s_dcache_to_ram));
     sim_slow_ram #(.MEM_DELAY(10)) ram(.clk(clk), .icache(s_icache_to_ram), .dcache(s_dcache_to_ram));
 
     //assign s_dcache.read_addr= {s_dcache_tag, s_dcache_index, s_dcache_block_offset, s_dcache_byte_offset};
@@ -217,7 +217,7 @@ module cache_testbench();
     function string byte_mask(input logic [`WORD_SIZE-1:0] byte_enable, input logic [`WORD_WIDTH-1:0] data); begin
         string s;
         s = "";
-        for (int i = 0; i < ``WORD_SIZE; i++) begin
+        for (int i = 0; i < `WORD_SIZE; i++) begin
             if (byte_enable[i]) begin
                 string h;
                 h.hextoa(data[i*8+:8]);
@@ -246,7 +246,7 @@ module sim_slow_ram #(
     logic [`BLOCK_WIDTH-1:0] rami_din, rami_dout, ramd_din, ramd_dout;
     logic rami_en, rami_we, ramd_en, ramd_we; 
     
-    assign dcache_baddr = dcache.write_addr_valid ? dcache.write_addr:dcache.read_addr;
+    assign dcache_baddr = dcache.write_addr_valid ? dcache.write_addr[31:4] : dcache.read_addr[31:4];
     
     
     sim_delay_ram #(
